@@ -2,19 +2,26 @@ import 'package:ensitapp/components/customer-bottom-bar.component.dart';
 import 'package:ensitapp/constant/color.constant.dart';
 import 'package:ensitapp/dialog/custom-loading.dialog.dart';
 import 'package:ensitapp/models/customer.model.dart';
+import 'package:ensitapp/models/post.model.dart';
 import 'package:ensitapp/screens/profil-screen/edit-profil.screen.dart';
 import 'package:ensitapp/services/customer.service.dart';
+import 'package:ensitapp/services/post.service.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class DetailProfilScrenn extends StatefulWidget {
+  final Customer customer;
+
+  const DetailProfilScrenn({Key key, this.customer}) : super(key: key);
   @override
   _DetailProfilScrennState createState() => _DetailProfilScrennState();
 }
 
 class _DetailProfilScrennState extends State<DetailProfilScrenn> {
   Customer _customer;
+  List<Post> _postList;
   bool _loading = true;
+  // bool _loadingPost = true;
   @override
   Future<void> initState() {
     super.initState();
@@ -24,6 +31,9 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
           _customer = customer;
           _loading = false;
         });
+      });
+      PostService().getPostsByUser().then((post) {
+        _postList = post;
       });
     });
   }
@@ -156,27 +166,28 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      OutlineButton(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: white,
-                            style: BorderStyle.solid,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProfilScreen(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Modifier le profil',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: white),
-                          )),
+                      if (widget.customer.objectId == _customer.objectId)
+                        OutlineButton(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: white,
+                              style: BorderStyle.solid,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfilScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Modifier le profil',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: white),
+                            )),
                     ],
                   ),
                   SizedBox(
@@ -189,15 +200,38 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
                     height: 10,
                   ),
                   Wrap(
-                    children: [
-                      // je dois mettre les post crée ici
-                    ],
+                    children: _postList.map<Widget>((post) {
+                      return PostImage(
+                        post: post,
+                      );
+                    }).toList()
+                    // je dois mettre les post crée ici
+                    ,
                   )
                 ],
               ),
             ),
       bottomNavigationBar: CustomBottomBar(
         currentIndex: 2,
+      ),
+    );
+  }
+}
+
+class PostImage extends StatelessWidget {
+  final Post post;
+
+  const PostImage({Key key, this.post}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100,
+      width: 100,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(post.imagePost),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
