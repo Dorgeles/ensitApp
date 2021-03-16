@@ -108,9 +108,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               if (selectedCustomer == null) return null;
                               if (selectedCustomer != null) {
                                 await canLaunch(
-                                        'sms: +${selectedCustomer.phoneNumber}?body="Merci pour ton temps"')
+                                        'sms: +225${selectedCustomer.phoneNumber}?body="Merci pour ton temps"')
                                     ? await launch(
-                                        'sms: +${selectedCustomer.phoneNumber}?body="Merci pour ton temps"')
+                                        'sms: +225${selectedCustomer.phoneNumber}?body="Merci pour ton temps"')
                                     : throw 'Could not launch ';
                               }
                             }

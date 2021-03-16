@@ -8,6 +8,7 @@ import 'package:ensitapp/dialog/custom-loading.dialog.dart';
 import 'package:ensitapp/models/customer.model.dart';
 import 'package:ensitapp/models/post.model.dart';
 import 'package:ensitapp/screens/profil-screen/detail-profil.screen.dart';
+import 'package:ensitapp/screens/profil-screen/profil-detail.screen.dart';
 import 'package:ensitapp/services/customer.service.dart';
 import 'package:ensitapp/services/post.service.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              DetailProfilScrenn(
+                                                              ProfilDetail(
                                                             customer: customer,
                                                           ),
                                                         ),

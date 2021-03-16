@@ -166,28 +166,27 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (widget.customer.objectId == _customer.objectId)
-                        OutlineButton(
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: white,
-                              style: BorderStyle.solid,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfilScreen(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Modifier le profil',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: white),
-                            )),
+                      OutlineButton(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: white,
+                            style: BorderStyle.solid,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfilScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Modifier le profil',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: white),
+                          )),
                     ],
                   ),
                   SizedBox(
