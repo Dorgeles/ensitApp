@@ -19,7 +19,6 @@ Future<void> main() async {
 
   runApp(
     MyApp(),
-    // ),
   );
 }
 
