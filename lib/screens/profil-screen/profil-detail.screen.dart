@@ -1,11 +1,10 @@
 import 'package:ensitapp/components/customer-bottom-bar.component.dart';
+import 'package:ensitapp/components/post.component.dart';
 import 'package:ensitapp/constant/color.constant.dart';
-import 'package:ensitapp/dialog/custom-loading.dialog.dart';
 import 'package:ensitapp/models/customer.model.dart';
 import 'package:ensitapp/models/post.model.dart';
 import 'package:ensitapp/services/post.service.dart';
 import 'package:flutter/material.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class ProfilDetail extends StatefulWidget {
   final Customer customer;
@@ -17,12 +16,17 @@ class ProfilDetail extends StatefulWidget {
 
 class _ProfilDetailState extends State<ProfilDetail> {
   List<Post> _postList;
-  // bool _loadingPost = true;
+  bool _loadingPost = true;
   @override
   Future<void> initState() {
     super.initState();
     PostService().getPostsByUser(widget.customer.user.objectId).then((post) {
-      _postList = post;
+      print("============== ${post.length}");
+
+      setState(() {
+        _postList = post;
+        _loadingPost = false;
+      });
     });
   }
 
@@ -146,7 +150,7 @@ class _ProfilDetailState extends State<ProfilDetail> {
             SizedBox(
               height: 10,
             ),
-            _postList == null
+            _loadingPost == true
                 ? Center(
                     child: Text(
                       'Pas de post disponible',
@@ -154,13 +158,11 @@ class _ProfilDetailState extends State<ProfilDetail> {
                     ),
                   )
                 : Wrap(
-                    children: _postList.map<Widget>((post) {
+                    children: _postList.map((post) {
                       return PostImage(
                         post: post,
                       );
-                    }).toList()
-                    // je dois mettre les post crée ici
-                    ,
+                    }).toList(),
                   )
           ],
         ),
@@ -190,3 +192,11 @@ class PostImage extends StatelessWidget {
     );
   }
 }
+// Navigator.push(
+// context,
+// MaterialPageRoute(
+//   builder: (context) => PostItem(
+//     post: post,
+//   ),
+// ),
+// );

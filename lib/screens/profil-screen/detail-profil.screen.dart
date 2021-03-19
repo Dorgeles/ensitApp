@@ -21,7 +21,7 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
   Customer _customer;
   List<Post> _postList;
   bool _loading = true;
-  // bool _loadingPost = true;
+  bool _loadingPost = true;
   @override
   Future<void> initState() {
     super.initState();
@@ -34,6 +34,7 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
       });
       PostService().getPostsByUser().then((post) {
         _postList = post;
+        _loadingPost = false;
       });
     });
   }
@@ -198,15 +199,20 @@ class _DetailProfilScrennState extends State<DetailProfilScrenn> {
                   SizedBox(
                     height: 10,
                   ),
-                  Wrap(
-                    children: _postList.map<Widget>((post) {
-                      return PostImage(
-                        post: post,
-                      );
-                    }).toList()
-                    // je dois mettre les post crée ici
-                    ,
-                  )
+                  _loadingPost == true
+                      ? Center(
+                          child: Text(
+                            'Pas de post disponible',
+                            style: TextStyle(fontSize: 18, color: white),
+                          ),
+                        )
+                      : Wrap(
+                          children: _postList.map((post) {
+                            return PostImage(
+                              post: post,
+                            );
+                          }).toList(),
+                        )
                 ],
               ),
             ),

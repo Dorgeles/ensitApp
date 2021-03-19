@@ -129,6 +129,12 @@ class PostService {
     newPost.setAdd("likedBy", customerId);
     newPost.save();
   }
+
+  setComment(Customer customer, String postId, String comment) async {
+    var newPost = ParseObject('Post')..objectId = postId;
+    newPost.setAdd("listComment", "${customer.firstname} dit que ${comment}");
+    newPost.save();
+  }
 }
 
 // post = ParseObject("Post")

@@ -1,16 +1,45 @@
+import 'package:ensitapp/models/customer.model.dart';
+import 'package:ensitapp/services/customer.service.dart';
+import 'package:ensitapp/services/post.service.dart';
+import 'package:ensitapp/services/user.service.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:ensitapp/constant/color.constant.dart';
 import 'package:ensitapp/models/post.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PostItem extends StatelessWidget {
+class PostItem extends StatefulWidget {
   final Post post;
   const PostItem({
     Key key,
     this.post,
   }) : super(key: key);
 
+  @override
+  _PostItemState createState() => _PostItemState();
+}
+
+class _PostItemState extends State<PostItem> {
+  Customer _customer;
+
+  @override
+  initState() {
+    super.initState();
+
+    ParseUser.currentUser().then((user) {
+      CustomerService().getByUser(user).then((customer) {
+        setState(() {
+          _customer = customer;
+        });
+      });
+      // UserService().isCurrent(widget.post.user.objectId).then((value) {
+      //   isOwner = value;
+      // });
+    });
+  }
+
+  TextEditingController commentCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,14 +60,14 @@ class PostItem extends StatelessWidget {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: NetworkImage(post.customer.picture),
+                              image: NetworkImage(widget.post.customer.picture),
                               fit: BoxFit.cover)),
                     ),
                     SizedBox(
                       width: 15,
                     ),
                     Text(
-                      post.customer.firstname,
+                      widget.post.customer.firstname,
                       style: TextStyle(
                           color: white,
                           fontSize: 15,
@@ -47,7 +76,7 @@ class PostItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  timeago.format(post.createdAt, locale: 'en_short'),
+                  timeago.format(widget.post.createdAt, locale: 'en_short'),
                   style: TextStyle(
                       color: white.withOpacity(0.5),
                       fontSize: 15,
@@ -63,7 +92,8 @@ class PostItem extends StatelessWidget {
             height: 400,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(post.imagePost), fit: BoxFit.cover)),
+                    image: NetworkImage(widget.post.imagePost),
+                    fit: BoxFit.cover)),
           ),
           SizedBox(
             height: 10,
@@ -75,9 +105,40 @@ class PostItem extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    SvgPicture.asset(
-                      "assets/images/loved_icon.svg",
-                      width: 27,
+                    GestureDetector(
+                      child: IconButton(
+                        padding: EdgeInsets.all(4),
+                        constraints: BoxConstraints(),
+                        icon: widget.post.likedBy.contains(_customer?.objectId)
+                            ? Icon(
+                                Icons.favorite,
+                                size: 30,
+                                color: Colors.red,
+                              )
+                            : Icon(
+                                Icons.favorite_border_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                        onPressed: () async {
+                          PostService postService = PostService();
+                          if (widget.post.likedBy
+                              .contains(_customer.objectId)) {
+                            postService.onLike(
+                                _customer.objectId, widget.post.objectId);
+                            setState(() {
+                              widget.post.likedBy.remove(_customer.objectId);
+                            });
+                          } else {
+                            postService.onDisLike(
+                                _customer.objectId, widget.post.objectId);
+
+                            setState(() {
+                              widget.post.likedBy.add(_customer.objectId);
+                            });
+                          }
+                        },
+                      ),
                     ),
                     SizedBox(
                       width: 20,
@@ -113,7 +174,7 @@ class PostItem extends StatelessWidget {
                   text: "Liked by ",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               TextSpan(
-                  text: "${post.likedBy.length} ",
+                  text: "${widget.post.likedBy.length} ",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
               TextSpan(
                   text: "et ",
@@ -131,11 +192,11 @@ class PostItem extends StatelessWidget {
               child: RichText(
                   text: TextSpan(children: [
                 TextSpan(
-                    text: "${post.customer.firstname} ",
+                    text: "${widget.post.customer.firstname} ",
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                 TextSpan(
-                    text: "${post.description}",
+                    text: "${widget.post.description}",
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               ]))),
@@ -145,7 +206,7 @@ class PostItem extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 15, right: 15),
             child: Text(
-              "Vue ${post.listComment.length} Commentaires",
+              "Vue ${widget.post.listComment.length} Commentaires",
               style: TextStyle(
                   color: white.withOpacity(0.5),
                   fontSize: 15,
@@ -153,57 +214,58 @@ class PostItem extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 12,
+            height: 30,
+            child: Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: widget.post.listComment != null
+                      ? widget.post.listComment
+                          .map((e) => Text(
+                                e.toString(),
+                                style: TextStyle(color: white),
+                              ))
+                          .toList()
+                      : Container(),
+                ),
+              ),
+            ),
           ),
           Padding(
               padding: EdgeInsets.only(left: 15, right: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  Expanded(
+                      child: TextField(
+                    style: TextStyle(color: white),
+                    controller: commentCtrl,
+                    decoration: InputDecoration(
+                      hintText: "Ajouter un commentaire...",
+                      hintStyle: TextStyle(
+                          color: white.withOpacity(0.5),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  )),
                   Row(
                     children: <Widget>[
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: NetworkImage(post.customer.picture),
-                                fit: BoxFit.cover)),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "ajouter un commentaire...",
-                        style: TextStyle(
+                      IconButton(
+                          icon: Icon(
+                            Icons.send,
                             color: white.withOpacity(0.5),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "😂",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "😍",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.add_circle,
-                        color: white.withOpacity(0.5),
-                        size: 18,
-                      )
+                            size: 18,
+                          ),
+                          onPressed: () async {
+                            PostService postService = PostService();
+                            final response = postService.setComment(_customer,
+                                widget.post.objectId, commentCtrl.text);
+                            if (response != null) {
+                              commentCtrl.text = "";
+                            }
+                            setState(() {
+                              widget.post.listComment.add(commentCtrl.text);
+                            });
+                          })
                     ],
                   )
                 ],

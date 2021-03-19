@@ -61,80 +61,82 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             )
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 8,
-                              ),
-                              _listCustomer.isEmpty
-                                  ? Center(
-                                      child: Container(
-                                        child: ColorLoader3(
-                                          radius: 30,
-                                          dotRadius: 6,
-                                        ),
-                                      ),
-                                    )
-                                  : Row(
-                                      children: _listCustomer != null
-                                          ? _listCustomer
-                                              .map((customer) => StoryItem(
-                                                    customer: customer,
-                                                    press: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ProfilDetail(
-                                                            customer: customer,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ))
-                                              .toList()
-                                          : [Container()]),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    color: white.withOpacity(0.3),
-                  ),
-                  _posts.isEmpty
-                      ? Center(
-                          child: Container(
-                            child: ColorLoader3(
-                              radius: 30,
-                              dotRadius: 6,
+          : Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15.0),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 8,
                             ),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Column(
-                              children: _posts != null
-                                  ? _posts
-                                      .map((post) => PostItem(
-                                            post: post,
-                                          ))
-                                      .toList()
-                                  : [Container()]),
+                            _listCustomer.isEmpty
+                                ? Center(
+                                    child: Container(
+                                      child: ColorLoader3(
+                                        radius: 30,
+                                        dotRadius: 6,
+                                      ),
+                                    ),
+                                  )
+                                : Row(
+                                    children: _listCustomer != null
+                                        ? _listCustomer
+                                            .map((customer) => StoryItem(
+                                                  customer: customer,
+                                                  press: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfilDetail(
+                                                          customer: customer,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ))
+                                            .toList()
+                                        : [Container()]),
+                          ],
                         ),
-                ],
-              ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  color: white.withOpacity(0.3),
+                ),
+                _posts.isEmpty
+                    ? Center(
+                        child: Container(
+                          child: ColorLoader3(
+                            radius: 30,
+                            dotRadius: 6,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: SingleChildScrollView(
+                            child: Column(
+                                children: _posts != null
+                                    ? _posts
+                                        .map((post) => PostItem(
+                                              post: post,
+                                            ))
+                                        .toList()
+                                    : [Container()]),
+                          ),
+                        ),
+                      ),
+              ],
             ),
       bottomNavigationBar: CustomBottomBar(
         currentIndex: 0,
