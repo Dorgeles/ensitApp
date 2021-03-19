@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'screens/login.screen.dart/login-screen.screen.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'screens/login.screen.dart/register.screen.dart';
 import 'screens/profil-screen/edit-profil.screen.dart';
 import 'services/init.service.dart';
@@ -14,13 +15,9 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIOverlays([]);
   final InitService init = InitService();
   await init.initParse();
+  // ParseUser("dorge", "dorge", "dorge@gmail.com").login();
 
   runApp(
-    // MultiProvider(
-    //   providers: [
-    //     ChangeNotifierProvider(create: (context) => CartProvider()),
-    //     ChangeNotifierProvider(create: (context) => ChatUnreadProvider()),
-    //   ],
     MyApp(),
     // ),
   );
@@ -42,7 +39,7 @@ class MyApp extends StatelessWidget {
             if (openSnapshot.data == null)
               return LoadingScreen();
             else if (openSnapshot.data == false)
-              return RegisterScreen();
+              return LoginScreen();
             else {
               return FutureBuilder<bool>(
                 future: SettingService().isAuth(),
@@ -50,7 +47,7 @@ class MyApp extends StatelessWidget {
                     (BuildContext context, AsyncSnapshot<bool> userSnapshot) {
                   if (userSnapshot.data == null) {
                     return LoadingScreen();
-                  } else if (userSnapshot.data == true) {
+                  } else if (userSnapshot.data == false) {
                     return LoginScreen();
                   } else {
                     return FutureBuilder<bool>(
@@ -76,17 +73,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
-// void main() async {
-//   final InitService init = InitService();
-//   await init.initParse();
-//   runApp(MaterialApp(
-//     debugShowCheckedModeBanner: false,
-//     title: "EnsitApp",
-//     theme: ThemeData(fontFamily: 'Billabong'),
-   
-//   ));
-// }
