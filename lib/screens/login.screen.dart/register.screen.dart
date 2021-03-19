@@ -1,6 +1,6 @@
 import 'package:ensitapp/constant/color.constant.dart';
+import 'package:ensitapp/dialog/loading.dialog.dart';
 import 'package:ensitapp/screens/login.screen.dart/login-screen.screen.dart';
-import 'package:ensitapp/screens/profil-screen/edit-profil.screen.dart';
 import 'package:ensitapp/services/login-logout.service.dart';
 import 'package:ensitapp/services/setting.service.dart';
 import 'package:flutter/material.dart';
@@ -194,6 +194,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        final progress = showprogressDialog(context,
+                            dotRaduis: 6, raduis: 20);
+                        progress.show();
                         final bool authResponse =
                             await SettingService().isAuth();
                         bool customerResponse =
@@ -204,6 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             emailController.text,
                             passwordController.text);
                         if (response == true) {
+                          progress.hide();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

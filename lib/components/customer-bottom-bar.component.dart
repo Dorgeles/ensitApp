@@ -25,20 +25,28 @@ class CustomBottomBar extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: SvgPicture.asset("assets/images/home_icon.svg"),
-            activeIcon: SvgPicture.asset("assets/images/home_active_icon.svg"),
+            icon: SvgPicture.asset(
+              "assets/images/home_icon.svg",
+              height: 40,
+              width: 40,
+            ),
+            activeIcon: SvgPicture.asset(
+              "assets/images/home_active_icon.svg",
+              height: 40,
+              width: 40,
+            ),
             label: 'Acceuil',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.send_outlined,
               color: white,
-              size: 60,
+              size: 40,
             ),
             activeIcon: Icon(
               Icons.send,
               color: white,
-              size: 60,
+              size: 40,
             ),
             label: 'Message',
           ),
@@ -46,12 +54,12 @@ class CustomBottomBar extends StatelessWidget {
             icon: Icon(
               Icons.people_outline_sharp,
               color: white,
-              size: 60,
+              size: 40,
             ),
             activeIcon: Icon(
               Icons.people_alt_sharp,
               color: white,
-              size: 60,
+              size: 40,
             ),
             label: 'Profil',
           ),

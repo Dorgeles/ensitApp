@@ -1,6 +1,6 @@
-import 'package:ensitapp/components/customer-bottom-bar.component.dart';
 import 'package:ensitapp/constant/color.constant.dart';
-import 'package:ensitapp/screens/home-screen/home.screen.dart';
+import 'package:ensitapp/dialog/loading.dialog.dart';
+import 'package:ensitapp/screens/login.screen.dart/register.screen.dart';
 import 'package:ensitapp/screens/profil-screen/edit-profil.screen.dart';
 import 'package:ensitapp/services/login-logout.service.dart';
 import 'package:flutter/material.dart';
@@ -145,10 +145,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        final progress = showprogressDialog(context,
+                            dotRaduis: 6, raduis: 20);
+                        progress.show();
                         bool response = await doUserLogin(
-                            password: passwordController.text.trim(),
-                            username: usernameController.text.trim());
+                            password: passwordController.text,
+                            username: usernameController.text);
                         if (response == true) {
+                          progress.hide();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -240,6 +244,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(
                       height: deviseWidth * .040,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Pas encore inscrit ? ',
+                          style: TextStyle(fontSize: 16, color: white),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Commence donc Ici",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: secondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
