@@ -71,9 +71,18 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Billabong
-      fonts:
-        - asset: assets/fonts/Billabong.ttf
+  - family: Segoe
+  # Nunito
+    fonts:
+      - asset: assets/fonts/Segoe/Segoe-UI-Bold.ttf
+      # Nunito/Nunito-Regular.ttf
+      - asset: assets/fonts/Segoe/Segoe-UI-Italic.ttf
+      - asset: assets/fonts/Segoe/Segoe-UI-Bold-Italic.ttf
+      #Nunito/Nunito-SemiBold.ttf
+        weight: 600
+      - asset: assets/fonts/Segoe/Segoe-UI.ttf
+      #Nunito/Nunito-Bold.ttf
+        weight: 600
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
